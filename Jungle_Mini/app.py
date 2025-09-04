@@ -9,7 +9,7 @@ from datetime import timedelta
 
 app = Flask(__name__)
 
-app.config["JWT_SECRET_KEY"] = "hashingKey-W$#Dha!8QW9-@jDSF)d@qj"
+app.config["JWT_SECRET_KEY"] = "hashingKey"
 app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 app.config["JWT_COOKIE_SECURE"] = False
 app.config["JWT_COOKIE_SAMESITE"] = "Lax"
