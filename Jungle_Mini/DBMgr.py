@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from werkzeug.security import generate_password_hash
 import json, os
 
-client = MongoClient('mongodb://test:test@13.125.220.88',27017)
+client = MongoClient('mongodb://xxxx:xxxxxx@xxxxxxxxxxx',27017)
 #client = MongoClient('localhost', 27017)
 db = client.univ
 base_path = os.path.dirname(__file__)
