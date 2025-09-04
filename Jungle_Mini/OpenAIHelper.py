@@ -4,8 +4,8 @@ API_KEY = os.getenv("OPENAI_API_KEY")
 if not API_KEY: raise ValueError("환경변수 OPENAI_API_KEY가 설정되지 않았습니다.")
 client = OpenAI(api_key=API_KEY)
 
-MODEL_SPECIAL_RECORD="ft:gpt-4.1-nano-2025-04-14:personal:my-student-record-model:CBLtBg34"
-MODEL_ACCEPTANCE_RATE="ft:gpt-4.1-nano-2025-04-14:personal::CBciPcoM"
+MODEL_SPECIAL_RECORD="xxxxxxxx"
+MODEL_ACCEPTANCE_RATE="xxxxxxx"
 
 EVAL_PROMPT = """
 당신은 한국의 최고 수준 대학교 입학사정관입니다. 학생의 생활기록부를 매우 엄격하고 비판적인 시각으로 평가합니다. 특히 지원하는 대학교의 등급({Univ_tier})과 학과({department})의 특성을 면밀히 반영하여 합격 가능성을 세분화하여 점수를 매깁니다.
