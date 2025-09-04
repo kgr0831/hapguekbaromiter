@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>생기부 부족 피드백</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+    /* #wrap styles are now handled by main.css's main tag */
+    /* #wrap {
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        padding: 50px 0;
+    } */
+
+    .main {
+        width: 900px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    h2 {
+        text-align: center;
+        font-weight: 500;
+        font-family: 'Black Han Sans', sans-serif;
+        color: rgb(0, 14, 64);
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        margin-bottom: 20px;
+        font-size: 250%;
+    }
+
+    .feedback-box {
+        background-color: rgb(0, 14, 64);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    .feedback-box:hover {
+        transform: translateY(-5px);
+    }
+
+    textarea#user-input {
+        width: 96.3%;
+        min-height: 200px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        padding: 15px;
+        resize: vertical;
+        font-size: 16px;
+        background-color: #f1f1f1;
+        color: #333;
+        font-family: 'Nanum Gothic', sans-serif;
+    }
+
+    textarea#user-input::placeholder {
+        color: #888;
+        font-style: italic;
+    }
+
+    button#analyze-btn {
+        width: 100%;
+        padding: 15px 20px;
+        border: none;
+        border-radius: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        background-color: #02b591;
+        color: #fff;
+        margin-top: 20px;
+        font-size: 18px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    button#analyze-btn:hover {
+        background-color: #019c80;
+        transform: translateY(-2px);
+    }
+    
+    button#analyze-btn:active {
+        transform: translateY(0);
+    }
+
+    .feedback-result {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #00C49F;
+        border-radius: 10px;
+        color: #fff;
+        min-height: 50px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+    }
+</style>
+<script src="{{ url_for('static', filename='js/common.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="main">
+        <h2>생기부 부족 피드백</h2>
+        <div class="feedback-box">
+            <textarea id="user-input" placeholder="여기에 생기부 내용을 입력하세요..."></textarea>
+            <button id="analyze-btn">분석하기</button>
+            <div class="feedback-result" id="feedback-result">
+                <p>분석 결과가 여기에 표시됩니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $("#analyze-btn").click(function(){
+            let student_text = $("#user-input").val().trim();
+            const feedbackResultDiv = $("#feedback-result");
+
+            if (student_text.length === 0) {
+                feedbackResultDiv.html("<p style='color: red;'>생활기록부 내용을 입력해주세요.</p>");
+                return;
+            }
+
+            feedbackResultDiv.html("<p>분석 중...</p>"); // Show loading message
+
+            apiRequest({
+                type: "POST",
+                url: "/generate_feedback",
+                contentType: "application/json",
+                data: JSON.stringify({ student_text: student_text }),
+                success: function (response) {
+                    if (response.success) {
+                        feedbackResultDiv.html("<p>" + response.feedback + "</p>");
+                    } else {
+                        feedbackResultDiv.html("<p style='color: red;'>피드백 생성 실패: " + response.message + "</p>");
+                    }
+                },
+                error: function(xhr) {
+                    let errorMessage = "피드백 생성 중 오류가 발생했습니다.";
+                    if (xhr.status === 401) {
+                        errorMessage = "로그인이 필요합니다. 다시 로그인 해주세요.";
+                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = "오류: " + xhr.responseJSON.message;
+                    }
+                    feedbackResultDiv.html("<p style='color: red;'>" + errorMessage + "</p>");
+                }
+            });
+        });
+    </script>
+{% endblock %}

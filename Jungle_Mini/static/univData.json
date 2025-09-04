@@ -1,0 +1,178 @@
+[
+  {
+    "university": "서울대학교",
+    "ratios": {
+      "academic": 0.5,
+      "community": 0.25,
+      "career": 0.25
+    }
+  },
+  {
+    "university": "연세대학교",
+    "ratios": {
+      "academic": 0.35,
+      "community": 0.3,
+      "career": 0.35
+    }
+  },
+  {
+    "university": "고려대학교",
+    "ratios": {
+      "academic": 0.5,
+      "community": 0.2,
+      "career": 0.3
+    }
+  },
+  {
+    "university": "서강대학교",
+    "ratios": {
+      "academic": 0.5,
+      "community": 0.2,
+      "career": 0.3
+    }
+  },
+  {
+    "university": "성균관대학교",
+    "ratios": {
+      "academic": 0.4,
+      "community": 0.1,
+      "career": 0.5
+    }
+  },
+  {
+    "university": "한양대학교",
+    "ratios": {
+      "academic": 0.5,
+      "community": 0,
+      "career": 0.5
+    }
+  },
+  {
+    "university": "중앙대학교",
+    "ratios": {
+      "academic": 0.5,
+      "community": 0.1,
+      "career": 0.4
+    }
+  },
+  {
+    "university": "경희대학교",
+    "ratios": {
+      "academic": 0.4,
+      "community": 0.2,
+      "career": 0.4
+    }
+  },
+  {
+    "university": "한국외국어대학교",
+    "ratios": {
+      "academic": 0.5,
+      "community": 0.2,
+      "career": 0.3
+    }
+  },
+  {
+    "university": "서울시립대학교",
+    "ratios": {
+      "academic": 0.35,
+      "community": 0.25,
+      "career": 0.4
+    }
+  },
+  {
+    "university": "이화여자대학교",
+    "ratios": {
+      "academic": 0.3,
+      "community": 0.2,
+      "career": 0.5
+    }
+  },
+  {
+    "university": "건국대학교",
+    "ratios": {
+      "academic": 0.3,
+      "community": 0.3,
+      "career": 0.4
+    }
+  },
+  {
+    "university": "동국대학교",
+    "ratios": {
+      "academic": 0.3,
+      "community": 0.2,
+      "career": 0.5
+    }
+  },
+  {
+    "university": "홍익대학교",
+    "ratios": {
+      "academic": 0.4,
+      "community": 0.2,
+      "career": 0.4
+    }
+  },
+  {
+    "university": "국민대학교",
+    "ratios": {
+      "academic": 0.3,
+      "community": 0.2,
+      "career": 0.5
+    }
+  },
+  {
+    "university": "숭실대학교",
+    "ratios": {
+      "academic": 0.2,
+      "community": 0.3,
+      "career": 0.5
+    }
+  },
+  {
+    "university": "세종대학교",
+    "ratios": {
+      "academic": 0.35,
+      "community": 0.1,
+      "career": 0.55
+    }
+  },
+  {
+    "university": "부산대학교",
+    "ratios": {
+      "academic": 0.4,
+      "community": 0.2,
+      "career": 0.4
+    }
+  },
+  {
+    "university": "경북대학교",
+    "ratios": {
+      "academic": 0.3,
+      "community": 0.2,
+      "career": 0.5
+    }
+  },
+  {
+    "university": "인하대학교",
+    "ratios": {
+      "academic": 0.3,
+      "community": 0.2,
+      "career": 0.5
+    }
+  },
+  {
+    "university": "아주대학교",
+    "ratios": {
+      "academic": 0.37,
+      "community": 0.28,
+      "career": 0.35
+    }
+  },
+  {
+    "university": "단국대학교",
+    "ratios": {
+      "academic": 0.35,
+      "community": 0.2,
+      "career": 0.45
+    }
+  }
+]

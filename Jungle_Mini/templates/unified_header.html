@@ -1,0 +1,128 @@
+
+<header>
+    <h3>합격바로미터✅</h3>
+    <div class="header_btn">
+        <h4 id="mypageBtn">마이페이지</h4>
+        <h4 id="predictBtn">합격 예측</h4>
+        <h4 id="recordBtn">기록</h4>
+        <h4 id="feedbackBtn" onclick="window.location.href = '/feedback'">피드백</h4>
+        <h4 id="generateBtn" onclick="window.location.href = '/make'">생성</h4> {# New Generate button #}
+        <h4 id="loginBtn">로그인</h4>
+    </div>
+</header>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+        /* font-family: "Do Hyeon", sans-serif; */ /* Removed to use global font */
+    }
+    header {
+        width: 100%;
+        height: 100px;
+        background-color: rgb(0, 14, 64);
+        position: relative;
+    }
+    h3 {
+        margin-left: 25px;
+        line-height: 100px;
+        font-size: 200%;
+        color: #02b591;
+        /* font-family: "Black Han Sans", sans-serif; */ /* Removed to use global font */
+    }
+    .header_btn {
+        position: absolute;
+        top: 35px;
+        right: 20px;
+        display: flex;
+    }
+    .header_btn > h4 {
+        margin-left: 20px;
+        height: 30px;
+        padding: 0 5px;
+        line-height: 30px;
+        border: 1px solid white;
+        color: #02b591;
+        font-size: 120%;
+    }
+    .header_btn > h4:hover {
+        background-color: #02b591;
+        color: black;
+        cursor: pointer;
+    }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const loginBtn = document.getElementById("loginBtn");
+    const mypageBtn = document.getElementById("mypageBtn");
+    const predictBtn = document.getElementById("predictBtn");
+    const recordBtn = document.getElementById("recordBtn");
+    const feedbackBtn = document.getElementById("feedbackBtn"); // Get the feedback button
+    const generateBtn = document.getElementById("generateBtn"); // Get the generate button
+
+    const userButtons = [mypageBtn, predictBtn, recordBtn, feedbackBtn, generateBtn]; // Add generateBtn to the array
+    const isLoggedIn = !!localStorage.getItem("userIndex");
+
+    function updateButtons() {
+        userButtons.forEach(btn => {
+            if (isLoggedIn) {
+                btn.style.opacity = "1";
+                btn.style.cursor = "pointer";
+            } else {
+                btn.style.opacity = "0.5";
+                btn.style.cursor = "not-allowed";
+            }
+        });
+    }
+
+    updateButtons();
+
+    if (isLoggedIn) {
+        loginBtn.textContent = "로그아웃";
+    } else {
+        loginBtn.textContent = "로그인";
+    }
+
+    mypageBtn.addEventListener("click", () => {
+        if (isLoggedIn) window.location.href = "/mypage";
+        else alert("로그인이 필요합니다.");
+    });
+
+    predictBtn.addEventListener("click", () => {
+        if (isLoggedIn) window.location.href = "/SELECTUNIV";
+        else alert("로그인이 필요합니다.");
+    });
+
+    recordBtn.addEventListener("click", () => {
+        if (isLoggedIn) window.location.href = "/GET_USER_RESULTS";
+        else alert("로그인이 필요합니다.");
+    });
+
+    feedbackBtn.addEventListener("click", () => { // Add event listener for feedback button
+        if (isLoggedIn) window.location.href = "/feedback";
+        else alert("로그인이 필요합니다.");
+    });
+
+    generateBtn.addEventListener("click", () => { // Add event listener for generate button
+        if (isLoggedIn) window.location.href = "/make";
+        else alert("로그인이 필요합니다.");
+    });
+
+    loginBtn.addEventListener("click", () => {
+        if (isLoggedIn) {
+            fetch("/LOGOUT", { method: "POST", credentials: "include" })
+            .then(res => res.json())
+            .then(response => {
+                if (response.result === "success") {
+                    localStorage.removeItem("userIndex");
+                    window.location.href = "/";
+                }
+            })
+            .catch(err => alert("로그아웃 실패: " + err));
+        } else {
+            window.location.href = "/";
+        }
+    });
+});
+</script>

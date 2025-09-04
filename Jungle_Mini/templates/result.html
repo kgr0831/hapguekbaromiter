@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="result-container">
+    <div class="result-message">
+        {{ university }}는 {{ category }}입니다 ({{ final_rate }}%)
+    </div>
+    <div class="check-btn" onclick="saveResult()">확인</div>
+</div>
+
+<style>
+body {
+    margin: 0;
+    background-color: #02B591;
+}
+
+.result-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 100px); /* 헤더 높이 제외 */
+}
+
+.result-message {
+    text-align: center;
+    color: rgb(0,14,64);
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.check-btn {
+    margin-top: 40px;
+    font-size: 2rem;
+    color: white;
+    cursor: pointer;
+}
+
+.check-btn:hover {
+    color: rgb(0,14,64);
+    border-bottom: 2px solid rgb(0,14,64);
+}
+</style>
+
+<script>
+function saveResult() {
+    const userIndexRaw = localStorage.getItem("userIndex");
+    if (!userIndexRaw) { 
+        // 로그인 안 된 경우에도 기록 페이지로 이동
+        window.location.href = "/GET_USER_RESULTS"; 
+        return; 
+    }
+
+    const userIndex = parseInt(userIndexRaw, 10);
+
+    fetch('/SAVE_RESULT', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            userIndex: userIndex,
+            university: "{{ university }}",
+            acceptRate: "{{ final_rate }}",
+            acceptGrade: "{{ category }}"
+        })
+    })
+    .finally(() => {
+        // 저장 성공/실패 관계없이 기록 페이지로 이동
+        window.location.href = "/GET_USER_RESULTS";
+    });
+}
+</script>
+
+{% endblock %}

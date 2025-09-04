@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>생기부 생성</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+    /* #wrap styles are now handled by main.css's main tag */
+    /* #wrap {
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        padding: 50px 0;
+    } */
+
+    .main {
+        width: 900px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    h2 {
+        text-align: center;
+        font-weight: 500;
+        font-family: 'Black Han Sans', sans-serif;
+        color: rgb(0, 14, 64);
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        margin-bottom: 20px;
+        font-size: 250%;
+    }
+
+    .feedback-box { /* Renamed to .generate-box for clarity, but keeping styles for now */
+        background-color: rgb(0, 14, 64);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    .feedback-box:hover {
+        transform: translateY(-5px);
+    }
+
+    textarea#user-input {
+        width: 96.3%;
+        min-height: 200px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        padding: 15px;
+        resize: vertical;
+        font-size: 16px;
+        background-color: #f1f1f1;
+        color: #333;
+        font-family: 'Nanum Gothic', sans-serif;
+    }
+
+    textarea#user-input::placeholder {
+        color: #888;
+        font-style: italic;
+    }
+
+    button#generate-btn { /* Renamed to #generate-btn */
+        width: 100%;
+        padding: 15px 20px;
+        border: none;
+        border-radius: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        background-color: #02b591;
+        color: #fff;
+        margin-top: 20px;
+        font-size: 18px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    button#generate-btn:hover {
+        background-color: #019c80;
+        transform: translateY(-2px);
+    }
+    
+    button#generate-btn:active {
+        transform: translateY(0);
+    }
+
+    .feedback-result {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #00C49F;
+        border-radius: 10px;
+        color: #fff;
+        min-height: 50px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+    }
+</style>
+<script src="{{ url_for('static', filename='js/common.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="main">
+        <h2>생기부 생성</h2> {# Changed heading #}
+        <div class="feedback-box"> {# Changed class name #}
+            <textarea id="user-input" placeholder="여기에 요구사항을 입력하세요..."></textarea>
+            <button id="generate-btn">생성하기</button> {# Changed button ID and text #}
+            <div class="feedback-result" id="generate-result"> {# Changed class and ID #}
+                <p>생성 결과가 여기에 표시됩니다.</p> {# Changed placeholder text #}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $("#generate-btn").click(function(){
+            let style_tone_text = $("#user-input").val().trim(); // Get style/tone text
+            const generateResultDiv = $("#generate-result");
+
+            const userIndex = localStorage.getItem("userIndex"); // Get userIndex from localStorage
+            if (!userIndex) {
+                generateResultDiv.html("<p style='color: red;'>로그인이 필요합니다. 사용자 정보를 찾을 수 없습니다.</p>");
+                return;
+            }
+
+            generateResultDiv.html("<p>생성 중...</p>"); // Show loading message
+
+            apiRequest({
+                type: "POST",
+                url: "/generate_special_record",
+                contentType: "application/json",
+                data: JSON.stringify({ userIndex: parseInt(userIndex), style_tone_text: style_tone_text }), // Send userIndex and style/tone
+                success: function (response) {
+                    if (response.success) {
+                        generateResultDiv.html("<p>" + response.generated_record + "</p>");
+                    } else {
+                        generateResultDiv.html("<p style='color: red;'>생성 실패: " + response.message + "</p>");
+                    }
+                },
+                error: function(xhr) {
+                    let errorMessage = "생성 중 오류가 발생했습니다.";
+                    if (xhr.status === 401) {
+                        errorMessage = "로그인이 필요합니다. 다시 로그인 해주세요.";
+                    }
+                    generateResultDiv.html("<p style='color: red;'>" + errorMessage + "</p>");
+                }
+            });
+        });
+    </script>
+{% endblock %}

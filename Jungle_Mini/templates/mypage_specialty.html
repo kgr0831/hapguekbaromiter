@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mypage-container">
+    <div class="mypage-card" id="specialty-card">
+        <h1 class="mypage-title">세부 특기 사항</h1>
+        <h4 class="notes" style="text-align: center; margin-bottom: 20px; color: #ccc;">* 전체 내용이 아닌 활동 내용을 간단히 작성해주세요.</h4>
+
+        <div id="specialty-context">
+            {% if user and user.specialty %}
+                {% for item in user.specialty %}
+                <div class="index form-group">
+                    <input class="input-data subject" name="과목" type="text" placeholder="과목명" value="{{ item.과목 }}">
+                    <textarea class="input-data activity" name="활동" placeholder="활동 내용을 기입해주세요." rows="1">{{ item.활동 }}</textarea>
+                                <button class="btn btn-danger" onclick="delete_specialty_item(this)">삭제</button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <button class="btn btn-add" onclick="add_specialty_input()">+ 과목 추가</button>
+
+        <div class="button-group">
+            <button class="btn btn-primary" onclick="toggle_and_save('specialty-card', this, 'specialty')">저장</button>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/common.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mypage.js', v='1.2') }}"></script>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mypage-container">
+    <div class="mypage-card" id="activities-card">
+        <h1 class="mypage-title">창의적 체험 활동</h1>
+        
+        <div class="form-group">
+            <label for="schoolrec">자율활동(학교)</label>
+            <input class="input-data" id="schoolrec" type="text" value="{{ (user.activities | default({})).schoolrec or '' }}" placeholder="활동 내용을 기입해주세요." readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="classrec">자율활동(학급)</label>
+            <input class="input-data" id="classrec" type="text" value="{{ (user.activities | default({})).classrec or '' }}" placeholder="활동 내용을 기입해주세요." readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="careerrec">진로활동</label>
+            <input class="input-data" id="careerrec" type="text" value="{{ (user.activities | default({})).careerrec or '' }}" placeholder="활동 내용을 기입해주세요." readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="clubrec">동아리 활동</label>
+            <input class="input-data" id="clubrec" type="text" value="{{ (user.activities | default({})).clubrec or '' }}" placeholder="활동 내용을 기입해주세요." readonly>
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-secondary" onclick="toggle_and_save('activities-card', this, 'activities')">수정</button>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/common.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mypage.js', v='1.2') }}"></script>
+{% endblock %}

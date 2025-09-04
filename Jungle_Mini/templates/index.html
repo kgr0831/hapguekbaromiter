@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Index Example</title>
+</head>
+<body>
+    <h1>LocalStorage userIndex 체크</h1>
+    <button id="checkBtn">userIndex 확인</button>
+
+    <script>
+        // localStorage에 기본값 설정 (없으면 0으로 초기화)
+        if (localStorage.getItem("userIndex") === null || localStorage.getItem("userIndex") === "") {
+            localStorage.setItem("userIndex", "0");
+        }
+
+        // 버튼 클릭 시 userIndex 확인
+        document.getElementById("checkBtn").addEventListener("click", function() {
+            const userIndexStr = localStorage.getItem("userIndex");
+
+            // 문자열로 존재 여부 체크
+            if (userIndexStr === null || userIndexStr === "") {
+                console.log("userIndex 값이 없습니다.");
+            } else {
+                const userIndex = parseInt(userIndexStr, 10);
+                if (isNaN(userIndex)) {
+                    console.log("userIndex가 숫자가 아닙니다:", userIndexStr);
+                } else {
+                    console.log("userIndex 값 존재:", userIndex);
+                }
+            }
+        });
+
+        // 콘솔 바로 확인
+        console.log("초기 userIndex:", localStorage.getItem("userIndex"));
+    </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="mypage-container">
+    <div class="mypage-card" id="basic-info-card">
+        <h1 class="mypage-title">학년별 기본 정보</h1>
+        
+        <div class="form-group">
+            <label for="grade-selector">학년 선택</label>
+            <select id="grade-selector" class="input-data">
+                <option value="1">1학년</option>
+                <option value="2">2학년</option>
+                <option value="3">3학년</option>
+            </select>
+        </div>
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
+
+        <div class="form-group">
+            <label for="career-aspiration">진로 희망 분야</label>
+            <input class="input-data" id="career-aspiration" type="text" value="{{ user_main_data['1'].career_aspiration or '' }}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="average-grade">평균 내신 등급</label>
+            <input class="input-data" id="average-grade" type="text" value="{{ user_main_data['1'].average_grade or '' }}" readonly>
+        </div>
+        
+        <div class="button-group">
+            <button class="btn btn-secondary" onclick="handle_grade_data_edit(this)">수정</button>
+        </div>
+    </div>
+
+    <div class="mypage-card">
+        <a href="{{ url_for('mypage_specialty') }}" class="link-btn">세부 특기 사항 관리</a>
+        <a href="{{ url_for('mypage_activities') }}" class="link-btn">창의적 체험 활동 관리</a>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/common.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mypage.js', v='1.2') }}"></script>
+<script>
+    // Pass the full data from Flask to a global JavaScript variable
+    const gradeData = {{ user_main_data | tojson }};
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const gradeSelector = document.getElementById('grade-selector');
+        const careerInput = document.getElementById('career-aspiration');
+        const gradeInput = document.getElementById('average-grade');
+        const editButton = document.querySelector('#basic-info-card .btn-secondary');
+
+        function update_fields(grade) {
+            const data = gradeData[grade] || {};
+            careerInput.value = data.career_aspiration || '';
+            gradeInput.value = data.average_grade || '';
+        }
+
+        gradeSelector.addEventListener('change', function() {
+            // If in edit mode, prevent switching
+            if (editButton.textContent === '저장') {
+                alert('먼저 저장을 완료해주세요.');
+                this.value = window.currentGrade; // Revert selection
+                return;
+            }
+            window.currentGrade = this.value;
+            update_fields(this.value);
+        });
+
+        // Set initial state
+        window.currentGrade = gradeSelector.value;
+        update_fields(window.currentGrade);
+    });
+</script>
+{% endblock %}

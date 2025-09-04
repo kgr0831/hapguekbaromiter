@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="wrap">
+    <h1>원하는 대학 찾기</h1>
+    <div class="search">
+        <!-- 커스텀 셀렉트 -->
+        <div class="custom-select">
+            <div class="selected" id="selectedText">가고싶은 대학교를 찾아주세요</div>
+            <ul class="options">
+                {% if universities and universities|length > 0 %}
+                    {% for univ in universities %}
+                        <li data-value="{{ univ }}">{{ univ }}</li>
+                    {% endfor %}
+                {% else %}
+                    <li data-value="">대학 데이터 없음</li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- 전공 입력 -->
+        <input type="text" id="Major" placeholder="가고싶은 과를 입력하세요">
+
+        <!-- 확인 버튼 -->
+        <h2 id="confirmBtn">확인</h2>
+    </div>
+</div>
+
+<style>
+* {
+            padding: 0;
+            margin: 0;
+            color: rgb(0, 14, 64);
+            font-weight: 400;
+            font-style: normal;
+        }
+#wrap { width:100%; height:100vh; background-color:#02B591; display:flex; flex-direction:column; justify-content:center; align-items:center;}
+h1 { position:absolute; transform:translate(-50%,-40%); left:50%; top:40%; font-size:500%; color:rgb(0,14,64);}
+.search { display:flex; flex-direction:row; align-items:center; margin-top:20px; gap:15px;}
+.custom-select { width:300px; position:relative; font-size:x-large; font-weight:300;}
+.custom-select .selected { background:white; color:rgb(158,158,158); opacity:0.6; height:50px; line-height:50px; padding:0 40px 0 10px; cursor:pointer; border:none; position:relative; transition:opacity 0.2s, color 0.2s;}
+.custom-select .selected::after { content:"▼"; position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:0.8em; color:rgb(100,100,100); pointer-events:none;}
+.custom-select .options { position:absolute; top:100%; left:0; right:0; background:white; max-height:200px; overflow-y:auto; display:none; z-index:9999;}
+.custom-select .options li { padding:10px; cursor:pointer; font-weight:300;}
+.custom-select .options li:hover { background:#eee;}
+#Major { width:300px; height:50px; font-size:x-large; color:rgb(158,158,158); opacity:0.6; font-weight:400; padding-left:10px;}
+h2 { color:white; cursor:not-allowed; opacity:0.5; font-size:x-large; margin:0;}
+h2.active { cursor:pointer; opacity:1;}
+h2.active:hover { color:black; border-bottom:rgb(0,14,64) solid 2px;}
+</style>
+
+<script>
+const customSelect = document.querySelector(".custom-select");
+const selected = customSelect.querySelector(".selected");
+const options = customSelect.querySelector(".options");
+const confirmBtn = document.getElementById("confirmBtn");
+const majorInput = document.getElementById("Major");
+
+let universitySelected = false;
+
+function checkActive() {
+    if (majorInput.value.trim() !== "") {
+        majorInput.style.color = "black"; 
+        majorInput.style.opacity = "1";
+    } else { 
+        majorInput.style.color = "rgb(158,158,158)"; 
+        majorInput.style.opacity="0.6";
+    }
+    if (universitySelected && majorInput.value.trim() !== "") 
+        confirmBtn.classList.add("active");
+    else 
+        confirmBtn.classList.remove("active");
+}
+
+// 대학교 선택
+selected.addEventListener("click", (e) => {
+    e.stopPropagation();
+    options.style.display = options.style.display === "block" ? "none" : "block";
+});
+
+options.addEventListener("click",(e)=>{
+    if(e.target.tagName==="LI" && e.target.dataset.value){
+        selected.textContent = e.target.textContent; 
+        selected.style.color = "black"; 
+        selected.style.opacity = "1";
+        selected.dataset.value = e.target.dataset.value;
+        options.style.display = "none"; 
+        universitySelected = true; 
+        checkActive();
+    }
+});
+
+document.addEventListener("click",()=>{options.style.display="none";});
+majorInput.addEventListener("input", checkActive);
+
+// 확인 버튼 클릭
+confirmBtn.addEventListener("click", ()=>{
+    if(!confirmBtn.classList.contains("active")) return;
+
+    const userIndexRaw = localStorage.getItem("userIndex");
+    const userIndex = userIndexRaw !== null ? parseInt(userIndexRaw) : null;
+
+    if(userIndex === null){
+        alert("로그인이 필요합니다.");
+        return;
+    }
+
+    const selectedUniversity = selected.dataset.value || "";
+    const major = majorInput.value.trim();
+
+    if (!selectedUniversity || !major) { 
+        alert("대학과 학과를 모두 선택/입력해주세요."); 
+        return; 
+    }
+
+    // Check for student record before proceeding
+    fetch(`/CHECK_STUDENT_RECORD?userIndex=${userIndex}`)
+    .then(response => response.json())
+    .then(data => {
+        if (!data.exists) {
+            alert("생활기록부 내용을 입력해주세요!");
+            window.location.href = "/mypage"; // Redirect to mypage
+            return;
+        }
+
+        // If student record exists, proceed with the original fetch request
+        fetch(`/ANALYZE_STUDENT_RECORD?userIndex=${userIndex}&university=${encodeURIComponent(selectedUniversity)}&department=${encodeURIComponent(major)}`)
+        .then(res => res.text())
+        .then(html => {
+            document.open();
+            document.write(html);
+            document.close();
+        })
+        .catch(err => {
+            console.error(err);
+            alert("서버 오류 발생");
+        });
+    })
+    .catch(err => {
+        console.error("Error checking student record:", err);
+        alert("생활기록부 확인 중 오류 발생");
+    });
+});
+</script>
+
+{% endblock %}

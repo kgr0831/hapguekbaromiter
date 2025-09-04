@@ -1,0 +1,214 @@
+
+{% extends "base.html" %}
+
+{% block head %}
+<style type="text/css">
+    * {
+        padding: 0;
+        margin: 0;
+        color: rgb(0, 14, 64);
+        font-weight: 400;
+        font-style: normal;
+    }
+
+    #wrap {
+        width: 100%;
+        height: 100vh;
+        background-color: #02b591;
+    }
+
+    input {
+        /* font-family: "Do Hyeon", sans-serif; */ /* Removed to use global font */
+        font-style: normal;
+        font-size: 24px;
+        color: rgb(158, 158, 158);
+    }
+
+    #sign {
+        padding-top: 15%;
+        text-align: center;
+    }
+
+    #sign h1 {
+        font-size: 500%;
+        color: black; /* Added for "합격바로미터" text */
+    }
+
+    #sign h2 {
+        height: 30px;
+        width: 100px;
+        font-size: 24px;
+        text-align: center;
+        color: white;
+        display: inline-block;
+    }
+
+    #sign h2:hover {
+        color: rgb(0, 14, 64);
+        cursor: pointer;
+        border-bottom: rgb(0, 14, 64) solid 2px;
+    }
+
+    .user-input {
+        font-size: x-large;
+        margin-top: 4%;
+        margin-bottom: 3%;
+    }
+
+    .user-input input {
+        width: 400px;
+        height: 50px;
+        font-family: "Do Hyeon", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        margin: 5px;
+    }
+
+    .user-input label {
+        width: 50px;
+    }
+</style>
+
+<script>
+    $(function () {
+        let idChecked = false;
+
+        var _sign = document.getElementById('sign');
+        var temp = `
+        <h1 id="sign-title">합격바로미터</h1>
+        <div class='user-input'>
+            <div id="user-id">
+                <label for="user-id-input">ID</label>
+                <input id="user-id-input" type="text">
+            </div>
+            <div id="user-pw">
+                <label for="user-pw-input">PW</label>
+                <input id="user-pw-input" type="password">
+            </div>
+        </div>
+        <div class='chsmod'>
+            <h2 id='chsmod-btn' onclick="chsmod('signup')">회원가입</h2>
+            <h2 id='entersign-btn' onclick="signin()">로그인</h2>
+        </div>`
+        _sign.innerHTML = temp;
+
+        // This is a global variable now
+        window.idChecked = false;
+    })
+
+    function chsmod(tmode) {
+        var _title = document.getElementById('sign-title');
+        var _chsmodbtn = document.getElementById('chsmod-btn');
+        var _enterbtn = document.getElementById('entersign-btn');
+        var _id = document.getElementById("user-id");
+
+        switch (tmode) {
+            case 'signup':
+                _title.innerText = "회원가입";
+                var temp = `
+                <label for="user-id-input">ID</label>
+                <input id="user-id-input" type="text">
+                <h2 id="idcheck" onclick="CheckIDDuplication()">중복 확인</h2>`
+                _id.innerHTML = temp;
+                _chsmodbtn.innerText = "취소";
+                _chsmodbtn.setAttribute("onclick", "chsmod('signin')");
+                _enterbtn.innerText = "확인";
+                _enterbtn.setAttribute("onclick", "signup()");
+                $('#user-id-input').val("");
+                $('#user-pw-input').val("");
+                break;
+
+            case 'signin':
+                _title.innerText = "합격바로미터";
+                var temp = `
+                <label for="user-id-input">ID</label>
+                <input id="user-id-input" type="text">`
+                _id.innerHTML = temp;
+                _chsmodbtn.innerText = "회원가입";
+                _chsmodbtn.setAttribute("onclick", "chsmod('signup')");
+                _enterbtn.innerText = "로그인";
+                _enterbtn.setAttribute("onclick", "signin()");
+                $('#user-id-input').val("");
+                $('#user-pw-input').val("");
+                break;
+        }
+    }
+
+    function CheckIDDuplication() {
+        const _inputID = document.getElementById("user-id-input").value
+        $.ajax({
+            method: "GET",
+            url: "/CHECKID",
+            data: { id: _inputID },
+            success: function (response) {
+                if (response["result"] == "success") {
+                    window.idChecked = true;
+                    document.getElementById("idcheck").setAttribute("disabled", "disabled");
+                    alert("ID 사용 가능");
+                }
+                else {
+                    window.idChecked = false;
+                    alert("ID 사용 불가");
+                }
+            }
+        })
+    }
+
+    function signup() {
+        if (!window.idChecked) {
+            alert("Id 확인 필요");
+            return;
+        }
+        const _ID = document.getElementById("user-id-input").value
+        const _PW = document.getElementById("user-pw-input").value
+        $.ajax({
+            method: "POST",
+            url: "/JOIN",
+            data: { id: _ID, pw: _PW },
+            success: function (response) {
+                if (response["result"] == "success") {
+                    alert("가입 성공");
+                    chsmod('signin');
+                }
+                else {
+                    alert("가입 실패");
+                }
+            }
+        })
+    }
+
+    function signin() {
+        const _ID = document.getElementById("user-id-input").value
+        const _PW = document.getElementById("user-pw-input").value
+
+        $.ajax({
+            type: "POST",
+            url: "/LOGIN",
+            data: { 'id': _ID, 'pw': _PW },
+            xhrFields: { withCredentials: true },
+            success: function (response) {
+                if (response.result === "success") {
+                    alert("로그인 성공");
+                    localStorage.setItem("userIndex", String(response.userIndex));
+                    window.location.href = "/SELECTUNIV"; // 로그인 후 이동
+                } 
+            },
+            error: function (xhr) {
+                if (xhr.status === 401) {
+                    alert("로그인 실패"); // 아이디/비밀번호 오류
+                } else {
+                    alert("서버 오류: " + xhr.status);
+                }
+            }
+        })
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+<div id="wrap">
+    <div id="sign">
+        <!-- Content is generated by script -->
+    </div>
+</div>
+{% endblock %}

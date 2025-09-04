@@ -1,0 +1,196 @@
+@font-face {
+    font-family: 'Aggravo';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108/SBAggroL.woff') format('woff');
+    font-weight: 300;
+    font-display: swap;
+}
+
+ @font-face {
+    font-family: 'Aggravo';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108/SBAggroM.woff') format('woff');
+    font-weight: 500;
+    font-display: swap;
+}
+
+ @font-face {
+    font-family: 'Aggravo';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108/SBAggroB.woff') format('woff');
+    font-weight: 700;
+    font-display: swap;
+}
+
+/* General Body Styles */
+body {
+    margin: 0;
+    background-color: #02b591;
+    color: #fff;
+    font-family: 'Aggravo', sans-serif;
+    font-weight: 300; /* Default to Light */
+}
+
+/* Ensure all common text elements use Aggravo font */
+p, span, a, label, input, textarea, select, button, h1, h2, h3, h4, h5, h6 {
+    font-family: 'Aggravo', sans-serif;
+}
+
+main {
+    width: 100%;
+    padding: 50px 0;
+    display: flex;
+    justify-content: center;
+}
+
+/* MyPage Container & Card */
+.mypage-container {
+    width: 90%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.mypage-card {
+    background-color: rgb(0, 14, 64);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+h1, .mypage-title {
+    text-align: center;
+    font-family: 'Aggravo', sans-serif;
+    font-weight: 700; /* Bold */
+    color: #02b591;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    margin-bottom: 30px;
+    font-size: 2.5rem;
+}
+
+/* Form Elements */
+.form-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    flex-basis: 150px;
+    font-size: 1.2rem;
+    color: #02b591;
+    text-align: right;
+    font-weight: 500; /* Medium */
+}
+
+.form-group input[type="text"],
+.form-group select,
+textarea.input-data {
+    flex-grow: 1;
+    height: 45px;
+    border-radius: 8px;
+    border: 1px solid #02b591;
+    background-color: #f1f1f1;
+    color: #333;
+    padding: 0 15px;
+    font-family: 'Aggravo', sans-serif;
+    font-weight: 300; /* Light */
+    font-size: 1rem;
+    resize: vertical; /* Allow vertical resizing for textareas */
+}
+
+.form-group input[readonly] {
+    background-color: #d3d3d3;
+    cursor: not-allowed;
+}
+
+/* Buttons */
+.btn {
+    height: 45px;
+    padding: 0 20px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Aggravo', sans-serif;
+    font-weight: 500; /* Medium */
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #02b591;
+    color: rgb(0, 14, 64);
+}
+
+.btn-primary:hover {
+    background-color: #019c80;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.btn-secondary:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-2px);
+}
+
+.btn-add {
+    display: block;
+    margin: 10px auto;
+    background-color: #02b591;
+    color: rgb(0, 14, 64);
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+/* Specialty Page Specifics */
+#specialty-context .index {
+    display: grid;
+    grid-template-columns: 150px 1fr 60px; /* Subject (fixed), Activity (grows), Delete (fixed) */
+    grid-gap: 15px; /* Gap between columns */
+    margin-bottom: 15px;
+    align-items: flex-start; /* Align items to the top */
+}
+
+#specialty-context .subject {
+    /* No flex properties needed */
+}
+
+#specialty-context .activity {
+    /* No flex properties needed */
+}
+
+#specialty-context .index .btn-secondary {
+    /* No flex properties needed */
+}
+
+/* Links as buttons */
+.link-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: 500; /* Medium */
+    transition: background-color 0.3s;
+}
+
+.link-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.delete-button {
+    /* display: none; */ /* Removed this line */
+}

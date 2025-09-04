@@ -1,0 +1,21 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>합격바로미터</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css', v='1.4') }}">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+    {% include "unified_header.html" %}
+    <main>
+        {% block content %}default page{% endblock %}
+    </main>
+</body>
+
+</html>
